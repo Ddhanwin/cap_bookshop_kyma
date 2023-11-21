@@ -1,0 +1,50 @@
+_schema-version: '3.1'
+ID: cap_bookshop_kyma
+version: 1.0.0
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx cds build --production
+modules:
+  - name: cap_bookshop_kyma-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: cap_bookshop_kyma-auth
+      - name: cap_bookshop_kyma-db
+
+  - name: cap_bookshop_kyma-db-deployer
+    type: hdb
+    path: gen/db
+    parameters:
+      buildpack: nodejs_buildpack
+    requires:
+      - name: cap_bookshop_kyma-db
+
+resources:
+  - name: cap_bookshop_kyma-auth
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: xsuaa
+      service-plan: application
+      path: ./xs-security.json
+      config:
+        xsappname: cap_bookshop_kyma-${org}-${space}
+        tenant-mode: dedicated
+  - name: cap_bookshop_kyma-db
+    type: com.sap.xs.hdi-container
+    parameters:
+      service: hana
+      service-plan: hdi-shared
