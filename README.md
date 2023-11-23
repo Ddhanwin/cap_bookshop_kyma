@@ -96,12 +96,17 @@ Important - Make sure to add the app/chart folder to you repository. After each 
 - Also go to app/chart/values.yaml file and add the kyma cluster domain, registry deploy token secret details and container image registry details there.
 
 To deploy this project run
+Naming conventions used for Container Images
+- <registry-path>/projectName-srv
+- <registry-path>/projectName-hana-deployer
 
 ```bash
     cds build --production
-    pack build <your-container-registry>/cap_bookshop_kyma-srv --path gen/srv --builder paketobuildpacks/builder:base
-    docker push <your-container-registry>/cap_bookshop_kyma-srv
-    pack build <your-container-registry>/cap_bookshop_kyma-hana-deployer --path gen/db --builder paketobuildpacks/builder:base
-    docker push <your-container-registry>/cap_bookshop_kyma-hana-deployer
-    helm upgrade --install <service-name> ./chart --namespace <your namespace>
+    pack build <IMAGE_NAME> --path gen/srv --builder paketobuildpacks/builder:base
+    docker push  <IMAGE_NAME>
+    pack build  <IMAGE_NAME> --path gen/db --builder paketobuildpacks/builder:base
+    docker push  <IMAGE_NAME>
+    helm upgrade --install <project-name> ./chart --namespace <your namespace>
 ```
+
+- <project-name> Eg : book, book-shop etc...
