@@ -24,9 +24,14 @@ Steps to push a image to registry
 - docker build the container image with tag
 - Push to the image to registry
 Important - For your kubernetes cluster to pull images from registry would require a deploy token from gitlab registry. This also needs to be added to your kyma namespace as a secret.
+For this Next, for all namespaces in Kyma where you need the corresponding access, you need to run the following:
 
+```bash
+kubectl create secret docker-registry book-registry-secret --docker-server=<***registry.com> --docker-username=gitlab+deploy-token-*** --docker-password=**** -n <NAMESPACE>
+```
 
-
+This will create a docker config JSON secret for your namespace.
+In order to deploy a service using an image from your repository, you must make sure to specify the imagePullSecrets in values.yaml file
 
 ## Prepare your kyma Development Environment for windows
 
