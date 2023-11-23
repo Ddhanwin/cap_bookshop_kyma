@@ -103,10 +103,11 @@ To deploy this project run
     pack build  <IMAGE_NAME> --path gen/db --builder paketobuildpacks/builder:base
     docker push  <IMAGE_NAME>
     helm upgrade --install <project-name> ./chart --namespace <your namespace>
-```
 
+```bash
 - Naming conventions used for Container Images
 - <registry-path>/projectName-srv
 - <registry-path>/projectName-hana-deployer
 
 - <project-name> Eg : book, book-shop etc...
+```
